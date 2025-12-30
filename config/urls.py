@@ -21,7 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = i18n_patterns(
-    path('admin/', admin.site.urls),
+    path('pilotkidwear/', admin.site.urls),
     path('', include('store.urls')),
     path('core/', include('core.urls')),
     path('orders/', include('orders.urls')),
