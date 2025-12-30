@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="tracking-container" style="max-width: 800px; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;">
+    <div>
+        <h2 class="section-title">{% trans "Shipping Info" %}</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">{{ field.label }}</label>
+                {{ field }}
+                {{ field.errors }}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn"
+                style="width: 100%; background: var(--text-color); color: #fff; margin-top: 1rem;">{% trans "Place Order" %}</button>
+        </form>
+    </div>
+
+    <div style="background: #f9f9f9; padding: 2rem; border-radius: 4px; height: fit-content;">
+        <h3 style="margin-bottom: 1rem;">{% trans "Order Summary" %}</h3>
+        <ul style="margin-bottom: 1rem;">
+            {% for item in cart %}
+            <li style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                <span>{{ item.quantity }}x {{ item.variant.product.name }}</span>
+                <span>${{ item.total_price }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+        <div
+            style="border-top: 1px solid #ddd; padding-top: 1rem; display: flex; justify-content: space-between; font-weight: 600;">
+            <span>{% trans "Total" %}</span>
+            <span>${{ cart.get_total_price }}</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

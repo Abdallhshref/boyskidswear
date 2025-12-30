@@ -1,0 +1,153 @@
+
+
+<!DOCTYPE html>
+<html lang="" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilot - Baby Store</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="logo">
+            <a href="/">
+                <img src="/static/images/pilot_logo.png" alt="Pilot" style="height: 40px; width: auto;">
+            </a>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="/shop/">Shop</a></li>
+                <li><a href="#">Info</a></li>
+                <li><a href="#">Blog</a></li>
+                <li class="track-link"><a href="/orders/track/">Track Order</a></li>
+                
+            </ul>
+        </nav>
+        <div class="header-actions">
+            <!-- Order Tracking Search Small or Lang Switcher -->
+            <form action="/search/" method="get" class="search-bar" style="display:flex; gap:0.5rem; align-items:center; margin-right:1rem;">
+                <input type="text" name="q" value="" placeholder="Search products" 
+                       class="form-input" style="padding:0.4rem 0.6rem; border:1px solid #ddd; border-radius:4px; min-width:220px;">
+                <button type="submit" class="btn" style="padding:0.45rem 0.8rem;">Search</button>
+            </form>
+            <form action="/i18n/setlang/" method="post" class="lang-switcher">
+                <input type="hidden" name="csrfmiddlewaretoken" value="fbTs0v081J3AsFPli9Wj65Pj5y9JKUbWFZd1uVAW4DCKCytwcP533EHzO4deFGvs">
+                <input name="next" type="hidden" value="/">
+                <select name="language" onchange="this.form.submit()">
+                    
+                    <option value="en" selected>English</option>
+                    <option value="ar" >العربية</option>
+                </select>
+            </form>
+            <a href="/orders/cart/" class="cart-icon">🛒 <span class="badge">0</span></a>
+        </div>
+    </header>
+
+    <main>
+        
+<section class="hero"
+    style="display: flex; align-items: center; justify-content: space-between; padding: 3rem 5%; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 400px; gap: 2rem; flex-wrap: wrap;">
+    <div class="hero-content" style="flex: 1; min-width: 300px;">
+        <h1 class="hero-title" style="font-size: 2.5rem; margin-bottom: 1.5rem; color: var(--text-color);">Unisex organic clothes for miniature you</h1>
+        <a href="/shop/" class="btn"
+            style="display: inline-block; padding: 1rem 2rem; background: var(--primary-color); color: white; text-decoration: none; border-radius: 4px; font-weight: 600;">See all items</a>
+    </div>
+    <div class="hero-image"
+        style="flex: 1; display: flex; justify-content: center; align-items: center; min-width: 300px;">
+        <img src="/static/images/pilot_banner_transparent.png" alt="Pilot Banner"
+            style="max-width: 100%; height: auto; max-height: 350px; object-fit: contain;">
+    </div>
+</section>
+<section id="new-arrivals">
+    <h2 class="section-title">New Arrivals</h2>
+    <div class="products-grid">
+        
+        <div class="product-card">
+            <a href="/product/knit-sweater/">
+                <div class="product-image" style="position:relative;">
+                    
+                    
+                    <img src="/media/products/sweater.png" alt="Cozy Knit Sweater"
+                        onmouseover="if(this.dataset.hover){this.dataset.prev=this.src; this.src=this.dataset.hover}"
+                        onmouseout="if(this.dataset.prev){this.src=this.dataset.prev}"
+                        data-hover="/media/products/sweater.png">
+                    
+                    
+                </div>
+                <h3 class="product-name">Cozy Knit Sweater</h3>
+                <p class="product-price">LE 35.00</p>
+            </a>
+        </div>
+        
+        <div class="product-card">
+            <a href="/product/bucket-hat/">
+                <div class="product-image" style="position:relative;">
+                    
+                    
+                    <img src="/media/products/hat.png" alt="Sun Bucket Hat"
+                        onmouseover="if(this.dataset.hover){this.dataset.prev=this.src; this.src=this.dataset.hover}"
+                        onmouseout="if(this.dataset.prev){this.src=this.dataset.prev}"
+                        data-hover="">
+                    
+                    
+                </div>
+                <h3 class="product-name">Sun Bucket Hat</h3>
+                <p class="product-price">LE 15.00</p>
+            </a>
+        </div>
+        
+        <div class="product-card">
+            <a href="/product/organic-romper/">
+                <div class="product-image" style="position:relative;">
+                    
+                    
+                    <img src="/media/products/romper.png" alt="Unisex Organic Romper"
+                        onmouseover="if(this.dataset.hover){this.dataset.prev=this.src; this.src=this.dataset.hover}"
+                        onmouseout="if(this.dataset.prev){this.src=this.dataset.prev}"
+                        data-hover="/media/products/romper.png">
+                    
+                    
+                </div>
+                <h3 class="product-name">Unisex Organic Romper</h3>
+                <p class="product-price">LE 25.00</p>
+            </a>
+        </div>
+        
+    </div>
+</section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-col">
+            <h4>Pilot</h4>
+            <div class="socials">
+                <span>IG</span> <span>FB</span>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Shop</h4>
+            <ul>
+                <li><a href="#">Bodies</a></li>
+                <li><a href="#">Tops</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Contacts</h4>
+            <p>269rgr Jarlplan st, Boston, USA</p>
+            <p>info@miniyou.com</p>
+        </div>
+    </footer>
+</body>
+
+</html>
