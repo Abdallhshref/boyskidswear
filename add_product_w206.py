@@ -1,5 +1,5 @@
 """
-Script to add W201 product (Unisex/Kids)
+Script to add W206 product (Girls Set)
 """
 
 import os
@@ -11,17 +11,10 @@ django.setup()
 
 from store.models import Category, Product, Color, Size, ProductVariant, Stock, Store, ProductImage
 
-# 1. Create new category "Kids Sets" (Since this product has both boys and girls)
-category, cat_created = Category.objects.get_or_create(
-    slug='kids-sets',
-    defaults={'name': 'Kids Sets'}
-)
-if cat_created:
-    print(f"[OK] Created Category: {category.name}")
-else:
-    print(f"[OK] Category exists: {category.name}")
+# 1. Get category "Girls Set"
+category = Category.objects.get(slug='girls-set')
 
-# 2. Get sizes 4, 6, 8, 10 (Created in W200)
+# 2. Get sizes 4, 6, 8, 10
 sizes_to_use = []
 for size_name in ['4', '6', '8', '10']:
     size = Size.objects.filter(name=size_name).first()
@@ -29,18 +22,18 @@ for size_name in ['4', '6', '8', '10']:
         sizes_to_use.append(size)
 
 if not sizes_to_use:
-    print("ERROR: Sizes 4, 6, 8, 10 not found. Run W200 script first.")
+    print("ERROR: Sizes 4, 6, 8, 10 not found.")
     exit(1)
 
-# 3. Create Product W201
+# 3. Create Product W206
 product, created = Product.objects.get_or_create(
-    slug='pilot-color-block-set-w201',
+    slug='mickey-flared-set-w206',
     defaults={
-        'name': 'Pilot Color Block Set W201',
-        'description': 'Trendy color-block hoodie set featuring the distinct "THE PILOT" patch. Available in a variety of vibrant and neutral combinations for both boys and girls. Includes a comfy hoodie with kangaroo pocket and matching joggers. Durable and stylish.',
+        'name': 'Mickey Flared Set W206',
+        'description': 'Stylish and comfortable girls set featuring a cozy hoodie with a classic Mickey Mouse print. The set includes trendy flared joggers in contrasting vibrant colors. Perfect for a casual yet fashionable look.',
         'category': category,
-        'base_price': Decimal('580.00'),
-        'main_image': 'products/W201/beige.jpg',
+        'base_price': Decimal('590.00'),
+        'main_image': 'products/W206/yellow.jpg',
         'is_active': True
     }
 )
@@ -51,13 +44,10 @@ else:
     print(f"[OK] Product already exists: {product.name}")
 
 # 4. Define colors
-# Mapping images to colors based on input
 color_data = [
-    {'name': 'Beige & Black', 'hex': '#F5F5DC,#000000', 'img': 'beige.jpg'}, # From image 0
-    {'name': 'Hot Pink & White', 'hex': '#FF69B4,#FFFFFF', 'img': 'hot_pink.jpg'}, # From image 0
-    {'name': 'Black & Pink', 'hex': '#000000,#FFC0CB', 'img': 'black_pink.jpg'}, # From image 1
-    {'name': 'Salmon & Navy', 'hex': '#FA8072,#000080', 'img': 'salmon.jpg'}, # From image 1/3
-    {'name': 'Blue & Red', 'hex': '#4169E1,#FF0000', 'img': 'blue.jpg'}, # From image 2
+    {'name': 'Yellow & Green', 'hex': '#FFFF00,#008000', 'img': 'yellow.jpg'}, # Image 0
+    {'name': 'Mustard & Maroon', 'hex': '#FFDB58,#800000', 'img': 'mustard.jpg'}, # Image 1
+    {'name': 'Pink & Lavender', 'hex': '#FFC0CB,#E6E6FA', 'img': 'pink.jpg'}, # Image 2
 ]
 
 # Get or create default store
@@ -93,7 +83,7 @@ for color_info in color_data:
             )
     
     # Link Image
-    img_path = f'products/W201/{color_info["img"]}'
+    img_path = f'products/W206/{color_info["img"]}'
     img, img_created = ProductImage.objects.get_or_create(
         product=product,
         image=img_path,
@@ -102,4 +92,4 @@ for color_info in color_data:
     if img_created:
         print(f"[OK] Added image: {img_path}")
 
-print(f"\n[SUCCESS] Product W201 added to 'Kids Sets' category!")
+print(f"\n[SUCCESS] Product W206 added to 'Girls Set' category!")
