@@ -1,0 +1,5 @@
+[build]
+aptPkgs = ["libcairo2-dev", "libgirepository1.0-dev", "pkg-config", "python3-dev", "gir1.2-gtk-3.0"]
+
+[setup]
+aptPkgs = ["libcairo2", "libgirepository-1.0-1"]
