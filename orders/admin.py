@@ -15,7 +15,7 @@ class InvoiceInline(admin.StackedInline):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['tracking_id', 'full_name', 'email', 'status', 'is_paid', 'created_at', 'get_total_price']
     list_filter = ['status', 'is_paid', 'created_at']
-    search_fields = ['tracking_id', 'full_name', 'email', 'iphone_number']
+    search_fields = ['tracking_id', 'full_name', 'email', 'phone_number']
     inlines = [OrderItemInline, InvoiceInline]
     readonly_fields = ['tracking_id', 'created_at']
     

@@ -4,13 +4,20 @@ from store.models import ProductVariant
 from .models import OrderItem, Order
 from .cart import Cart
 from .forms import OrderCreateForm, OrderTrackingForm
+from decimal import Decimal
 
 @require_POST
 def cart_add(request, variant_id):
     cart = Cart(request)
     variant = get_object_or_404(ProductVariant, id=variant_id)
-    # Simple add logic, assuming qty 1 for now unless form provides it
-    cart.add(variant=variant, quantity=1)
+    
+    # Get quantity from POST, default to 1 if not provided or invalid
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+    except (ValueError, TypeError):
+        quantity = 1
+        
+    cart.add(variant=variant, quantity=quantity)
     return redirect('cart_detail')
 
 def cart_remove(request, variant_id):
@@ -28,10 +35,42 @@ def checkout(request):
     if len(cart) == 0:
         return redirect('home')
 
+    form = OrderCreateForm(request.POST or None)
+    shipping_price = Decimal('0')
+    discount_amount = Decimal('0')
+    total_price = cart.get_total_price()
+
     if request.method == 'POST':
-        form = OrderCreateForm(request.POST)
-        if form.is_valid():
-            order = form.save()
+        # Check if user clicked "Update" or "Place Order"
+        is_final_submit = 'place_order' in request.POST
+        
+        # Get city and coupon even if form isn't fully valid yet for preview
+        city = request.POST.get('city')
+        coupon_code = request.POST.get('coupon_code')
+
+        # 1. Shipping Price Logic
+        if city:
+            if city in ['Cairo', 'Giza']:
+                shipping_price = Decimal('50')
+            else:
+                shipping_price = Decimal('75')
+        
+        # 2. Discount Logic
+        items_total = cart.get_total_price()
+        if coupon_code == 'SAVE10':
+            discount_amount = items_total * Decimal('0.10')
+        
+        # 3. Final Total Calculation for preview
+        total_price = items_total + shipping_price - discount_amount
+
+        if is_final_submit and form.is_valid():
+            order = form.save(commit=False)
+            order.shipping_price = shipping_price
+            order.discount_amount = discount_amount
+            order.total_price = total_price
+            order.is_paid = False 
+            order.save()
+
             for item in cart:
                 OrderItem.objects.create(
                     order=order,
@@ -40,32 +79,24 @@ def checkout(request):
                     quantity=item['quantity']
                 )
                 
-            # Deduct Stock
-                # Note: This is a simple implementation. In production, use F() expressions and atomic transactions
+                # Deduct Stock
                 variant = item['variant']
-                stock = variant.stocks.first() # Simplifying: taking from first available store
+                stock = variant.stocks.first()
                 if stock:
                     stock.quantity -= item['quantity']
                     stock.save()
 
-            # --- PAYMOB INTEGRATION START ---
-            # 1. Authenticate with Paymob API
-            # 2. Register Order
-            # 3. Request Payment Key
-            # 4. Redirect user to Paymob IFrame: https://accept.paymob.com/api/acceptance/iframes/{{iframe_id}}?payment_token={{token}}
-            # 
-            # For now, we simulate a successful payment locally.
-            order.is_paid = True # Mark as paid for demo (or set 'pending' if waiting for callback)
-            order.save()
-            # --- PAYMOB INTEGRATION END ---
-
             cart.clear()
-            # Send invoice / redirect to success
             return redirect('order_created', order_id=order.tracking_id)
-    else:
-        form = OrderCreateForm()
     
-    return render(request, 'orders/checkout.html', {'cart': cart, 'form': form})
+    context = {
+        'cart': cart,
+        'form': form,
+        'shipping_price': shipping_price,
+        'discount_amount': discount_amount,
+        'total_price': total_price
+    }
+    return render(request, 'orders/checkout.html', context)
 
 def order_created(request, order_id):
     order = get_object_or_404(Order, tracking_id=order_id)

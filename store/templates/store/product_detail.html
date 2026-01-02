@@ -68,7 +68,8 @@
                                 title="{{ color.name }}">
                             </div>
                             <span class="color-name"
-                                style="font-size: 0.75rem; font-weight: 700; color: #333; text-align: center; max-width: 70px; line-height: 1.2; text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;">{{ color.name }}</span>
+                                style="font-size: 0.75rem; font-weight: 700; color: #333; text-align: center; max-width: 70px; line-height: 1.2; text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;">{{
+                                color.name }}</span>
                         </label>
                         {% endfor %}
                     </div>
@@ -91,6 +92,20 @@
                 <input type="hidden" name="variant" id="selectedVariantId">
 
                 <div id="stock-message" style="margin-bottom: 1rem; height: 1.2em; font-weight: bold;"></div>
+            </div>
+
+            <!-- Quantity Selector -->
+            <div class="quantity-section" style="margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;">
+                <h3 style="margin: 0; font-size: 1.1rem;">{% trans "Quantity" %}</h3>
+                <div class="quantity-input-wrapper"
+                    style="display: flex; align-items: center; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; background: #fff;">
+                    <button type="button" onclick="changeQty(-1)"
+                        style="border: none; background: none; padding: 0.5rem 1rem; cursor: pointer; font-size: 1.2rem; transition: background 0.2s;">-</button>
+                    <input type="number" name="quantity" id="quantityInput" value="1" min="1" readonly
+                        style="width: 50px; text-align: center; border: none; border-left: 1px solid #ddd; border-right: 1px solid #ddd; padding: 0.5rem 0; font-size: 1rem; -moz-appearance: textfield; pointer-events: none;">
+                    <button type="button" onclick="changeQty(1)"
+                        style="border: none; background: none; padding: 0.5rem 1rem; cursor: pointer; font-size: 1.2rem; transition: background 0.2s;">+</button>
+                </div>
             </div>
 
             <button type="button" class="btn" onclick="submitToCart()" id="addToCartBtn" disabled
@@ -138,6 +153,13 @@
             const defaultImage = document.getElementById('default-image').textContent;
             let selectedColorId = null;
             let selectedSizeId = null;
+
+            function changeQty(delta) {
+                const input = document.getElementById('quantityInput');
+                let val = parseInt(input.value) + delta;
+                if (val < 1) val = 1;
+                input.value = val;
+            }
 
             function handleColorChange(input) {
                 selectedColorId = parseInt(input.value);

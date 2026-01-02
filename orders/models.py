@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from decimal import Decimal
 import uuid
 from store.models import ProductVariant
 
@@ -12,12 +13,47 @@ class Order(models.Model):
         ('cancelled', _('Cancelled')),
     )
 
+    GOVERNORATE_CHOICES = (
+        ('Cairo', _('Cairo')),
+        ('Giza', _('Giza')),
+        ('Alexandria', _('Alexandria')),
+        ('Dakahlia', _('Dakahlia')),
+        ('Red Sea', _('Red Sea')),
+        ('Beheira', _('Beheira')),
+        ('Fayoum', _('Fayoum')),
+        ('Gharbia', _('Gharbia')),
+        ('Ismailia', _('Ismailia')),
+        ('Monufia', _('Monufia')),
+        ('Minya', _('Minya')),
+        ('Qalyubia', _('Qalyubia')),
+        ('New Valley', _('New Valley')),
+        ('Suez', _('Suez')),
+        ('Aswan', _('Aswan')),
+        ('Assiut', _('Assiut')),
+        ('Beni Suef', _('Beni Suef')),
+        ('Port Said', _('Port Said')),
+        ('Damietta', _('Damietta')),
+        ('Sharkia', _('Sharkia')),
+        ('South Sinai', _('South Sinai')),
+        ('Kafr El Sheikh', _('Kafr El Sheikh')),
+        ('Matrouh', _('Matrouh')),
+        ('Luxor', _('Luxor')),
+        ('Qena', _('Qena')),
+        ('North Sinai', _('North Sinai')),
+        ('Sohag', _('Sohag')),
+    )
+
     tracking_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     full_name = models.CharField(max_length=150)
     email = models.EmailField()
-    iphone_number = models.CharField(max_length=20) # 'iPhone' from prompt "tell me what u want" -> likely just phone number
+    phone_number = models.CharField(max_length=20)
     address = models.TextField()
-    city = models.CharField(max_length=100)
+    city = models.CharField(max_length=100, choices=GOVERNORATE_CHOICES)
+    
+    # Pricing fields
+    shipping_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -31,7 +67,8 @@ class Order(models.Model):
         return f"Order {self.tracking_id} - {self.full_name}"
 
     def get_total_price(self):
-        return sum(item.get_cost() for item in self.items.all())
+        items_total = sum(item.get_cost() for item in self.items.all())
+        return items_total + self.shipping_price - self.discount_amount
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)

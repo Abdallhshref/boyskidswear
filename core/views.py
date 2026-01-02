@@ -109,7 +109,7 @@ def export_users_excel(request):
         user_data[key]['orders'] += 1
         user_data[key]['total'] += order.get_total_price()
         user_data[key]['email'] = order.email
-        user_data[key]['phone'] = order.iphone_number
+        user_data[key]['phone'] = order.phone_number
         user_data[key]['city'] = order.city
     
     # Create workbook
@@ -170,7 +170,7 @@ def export_users_csv(request):
         user_data[key]['orders'] += 1
         user_data[key]['total'] += order.get_total_price()
         user_data[key]['email'] = order.email
-        user_data[key]['phone'] = order.iphone_number
+        user_data[key]['phone'] = order.phone_number
         user_data[key]['city'] = order.city
     
     # Create CSV
